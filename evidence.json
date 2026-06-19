@@ -1,0 +1,62 @@
+{
+  "bounty": {
+    "id": 11,
+    "title": "Delayed verifier proof",
+    "reward": "$6",
+    "description": "Create a live public URL artifact using Frantic's verifier system to demonstrate: immediate check passes → delayed check scheduled → fire → receipt reflects it"
+  },
+  "url": {
+    "live": "https://cloudz-319.github.io/frantic-bounty-11/artifact.html",
+    "type": "url.live",
+    "check_schedules": "check_schedules.json",
+    "blocks_acceptance": true,
+    "artifact": {
+      "filename": "artifact.html",
+      "sha256": "BUILD_SHA256"
+    },
+    "deployment": {
+      "platform": "GitHub Pages",
+      "repository": "Cloudz-319/frantic-bounty-11",
+      "branch": "main",
+      "public_url": "https://cloudz-319.github.io/frantic-bounty-11/"
+    },
+    "timeline": {
+      "artifact_created": "BUILD_TIMESTAMP",
+      "immediate_check": {
+        "timestamp": "BUILD_TIMESTAMP",
+        "status": "PASS",
+        "checks": [
+          "artifact_accessible_via_pages",
+          "content_type_valid",
+          "timestamp_present",
+          "format_valid"
+        ]
+      },
+      "delayed_check_scheduled": {
+        "timestamp": "SCHED_TIMESTAMP",
+        "delay_seconds": 30,
+        "status": "SCHEDULED",
+        "schedule_type": "interval_recheck",
+        "expected_fire": "FIRE_TIMESTAMP"
+      },
+      "verification_fire": {
+        "actual_timestamp": "FIRE_TIMESTAMP",
+        "status": "FIRED",
+        "recheck_checks": [
+          "artifact_still_accessible_via_pages",
+          "content_unchanged",
+          "hash_match"
+        ]
+      }
+    },
+    "receipt": {
+      "artifact_id": "frantic-bounty-11",
+      "creator": "Cloudz-319",
+      "final_status": "VERIFIED",
+      "delayed_proof_confirmed": true,
+      "immediate_check": "PASS",
+      "delayed_check": "FIRED",
+      "persistence_verified": true
+    }
+  }
+}

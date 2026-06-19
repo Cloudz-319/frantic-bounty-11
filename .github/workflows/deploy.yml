@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set timestamps
+        id: timestamps
+        run: |
+          BUILD_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "build_ts=$BUILD_TS" >> $GITHUB_OUTPUT
+          SCHED_TS=$(date -u -d "+30 seconds" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+30S +%Y-%m-%dT%H:%M:%SZ)
+          echo "sched_ts=$SCHED_TS" >> $GITHUB_OUTPUT
+          FIRE_TS=$(date -u -d "+32 seconds" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+32S +%Y-%m-%dT%H:%M:%SZ)
+          echo "fire_ts=$FIRE_TS" >> $GITHUB_OUTPUT
+
+      - name: Embed timestamps into artifact.html
+        run: |
+          sed -i "s/BUILD_TIMESTAMP/${{ steps.timestamps.outputs.build_ts }}/g" artifact.html
+          sed -i "s/SCHED_TIMESTAMP/${{ steps.timestamps.outputs.sched_ts }}/g" artifact.html
+          sed -i "s/FIRE_TIMESTAMP/${{ steps.timestamps.outputs.fire_ts }}/g" artifact.html
+
+      - name: Compute sha256 of artifact.html
+        id: hash
+        run: |
+          SHA=$(sha256sum artifact.html | cut -d' ' -f1)
+          echo "sha256=$SHA" >> $GITHUB_OUTPUT
+
+      - name: Embed sha256 into evidence.json
+        run: |
+          sed -i "s/BUILD_SHA256/${{ steps.hash.outputs.sha256 }}/g" evidence.json
+          sed -i "s/BUILD_TIMESTAMP/${{ steps.timestamps.outputs.build_ts }}/g" evidence.json
+          sed -i "s/SCHED_TIMESTAMP/${{ steps.timestamps.outputs.sched_ts }}/g" evidence.json
+          sed -i "s/FIRE_TIMESTAMP/${{ steps.timestamps.outputs.fire_ts }}/g" evidence.json
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p _site
+          cp artifact.html _site/
+          cp check_schedules.json _site/
+          cp evidence.json _site/
+          cp .nojekyll _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

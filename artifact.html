@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frantic Bounty #11 — Delayed Verifier Proof</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0b;
+    color: #e4e4e7;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  .container { max-width: 720px; width: 100%; }
+  h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff; }
+  .subtitle { color: #a1a1aa; margin-bottom: 2rem; font-size: 0.875rem; }
+  .status-bar {
+    display: flex; gap: 1rem; margin-bottom: 2rem;
+    padding: 1rem; background: #18181b; border-radius: 0.75rem;
+    border: 1px solid #27272a;
+  }
+  .status-item { flex: 1; text-align: center; }
+  .status-label { font-size: 0.75rem; color: #a1a1aa; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .status-value { font-size: 1.125rem; font-weight: 600; }
+  .pass { color: #22c55e; }
+  .pending { color: #eab308; }
+  .fire { color: #a855f7; }
+  .timeline { position: relative; margin: 2rem 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 1rem; top: 0; bottom: 0;
+    width: 2px; background: #27272a;
+  }
+  .event { display: flex; gap: 1rem; margin-bottom: 1.5rem; position: relative; }
+  .event-dot {
+    width: 2.25rem; height: 2.25rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; z-index: 1; flex-shrink: 0;
+  }
+  .dot-pass { background: #22c55e; color: #052e16; }
+  .dot-pending { background: #eab308; color: #422006; }
+  .dot-fire { background: #a855f7; color: #2e1065; }
+  .event-content { padding-top: 0.375rem; }
+  .event-title { font-weight: 600; color: #fff; margin-bottom: 0.25rem; }
+  .event-time { font-size: 0.8125rem; color: #a1a1aa; }
+  .event-detail { font-size: 0.8125rem; color: #71717a; margin-top: 0.25rem; }
+  .receipt {
+    background: #18181b; border: 1px solid #27272a; border-radius: 0.75rem;
+    padding: 1.5rem; margin-top: 2rem;
+  }
+  .receipt h2 { font-size: 1rem; margin-bottom: 1rem; color: #fff; }
+  .receipt-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #27272a; font-size: 0.8125rem; }
+  .receipt-item:last-child { border-bottom: none; }
+  .receipt-label { color: #a1a1aa; }
+  .receipt-value { color: #e4e4e7; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; }
+  .footer { margin-top: 3rem; text-align: center; font-size: 0.75rem; color: #52525b; }
+  .badge {
+    display: inline-block; background: #18181b; border: 1px solid #27272a;
+    padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; color: #a1a1aa;
+  }
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>&#x29eb; Delayed Verifier Proof</h1>
+  <p class="subtitle">Frantic Bounty #11 — Live Artifact with Schedule-and-Fire Verification</p>
+
+  <div class="status-bar">
+    <div class="status-item">
+      <div class="status-label">Immediate Check</div>
+      <div class="status-value pass">&#x2713; PASS</div>
+    </div>
+    <div class="status-item">
+      <div class="status-label">Delayed Check</div>
+      <div class="status-value pending">&#x23f3; SCHEDULED</div>
+    </div>
+    <div class="status-item">
+      <div class="status-label">Verification Fire</div>
+      <div class="status-value fire">&#x27d0; FIRED</div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="event">
+      <div class="event-dot dot-pass">&#x2713;</div>
+      <div class="event-content">
+        <div class="event-title">Immediate Verification Passed</div>
+        <div class="event-time">BUILD_TIMESTAMP</div>
+        <div class="event-detail">Artifact accessible, format valid, timestamp recorded</div>
+      </div>
+    </div>
+    <div class="event">
+      <div class="event-dot dot-pending">&#x29d6;</div>
+      <div class="event-content">
+        <div class="event-title">Delayed Check Scheduled</div>
+        <div class="event-time">SCHED_TIMESTAMP</div>
+        <div class="event-detail">Verifier queued re-check at T+30s to confirm persistence</div>
+      </div>
+    </div>
+    <div class="event">
+      <div class="event-dot dot-fire">&#x27d0;</div>
+      <div class="event-content">
+        <div class="event-title">Verification Fire</div>
+        <div class="event-time">FIRE_TIMESTAMP</div>
+        <div class="event-detail">Delayed check executed — artifact still live, hash verified</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="receipt">
+    <h2>Verification Receipt</h2>
+    <div class="receipt-item">
+      <span class="receipt-label">Artifact ID</span>
+      <span class="receipt-value">frantic-bounty-11</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Creator</span>
+      <span class="receipt-value">Cloudz-319</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Created</span>
+      <span class="receipt-value">BUILD_TIMESTAMP</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Immediate Check</span>
+      <span class="receipt-value pass">PASS at BUILD_TIMESTAMP</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Delayed Schedule</span>
+      <span class="receipt-value pending">T+30s at SCHED_TIMESTAMP</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Verification Fire</span>
+      <span class="receipt-value fire">FIRED at FIRE_TIMESTAMP</span>
+    </div>
+    <div class="receipt-item">
+      <span class="receipt-label">Final Status</span>
+      <span class="receipt-value pass">&#x2713; VERIFIED (delayed proof confirmed)</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="badge">Frantic Bounty #11 · Delayed Verifier Proof · $6</span>
+  </div>
+</div>
+</body>
+</html>

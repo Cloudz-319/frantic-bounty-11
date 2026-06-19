@@ -1,0 +1,20 @@
+{
+  "version": "1",
+  "checks": [
+    {
+      "id": "immediate",
+      "type": "url.live",
+      "target": "https://cloudz-319.github.io/frantic-bounty-11/artifact.html",
+      "not_before": null,
+      "blocks_acceptance": false
+    },
+    {
+      "id": "delayed-recheck",
+      "type": "url.live",
+      "target": "https://cloudz-319.github.io/frantic-bounty-11/artifact.html",
+      "not_before": "+30s",
+      "blocks_acceptance": true,
+      "depends_on": ["immediate"]
+    }
+  ]
+}
